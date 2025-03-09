@@ -2,15 +2,16 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerBehindProxyGuard } from './throttler-behind-proxy.guard';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import redisConfig from '@app/commons/config/redis.config';
 
 @Module({
     imports: [
         ThrottlerModule.forRootAsync({
             imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
+            inject: [redisConfig.KEY],
+            useFactory: (config: ConfigType<typeof redisConfig>) => ({
                 throttlers: [
                     {
                         name: 'default',
@@ -18,7 +19,7 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
                         limit: 60,
                     },
                 ],
-                storage: new ThrottlerStorageRedisService(config.get('REDIS_URL')),
+                storage: new ThrottlerStorageRedisService(config.url),
             }),
         }),
     ],
