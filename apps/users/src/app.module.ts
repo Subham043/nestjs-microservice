@@ -4,6 +4,7 @@ import databaseConfig from './config/database.config';
 import { UsersModule } from './users/users.module';
 import appConfig from './config/app.config';
 import { PrismaModule } from './prisma/prisma.module';
+import { ThrottleModule } from '@app/commons';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     UsersModule,
     PrismaModule,
+    ThrottleModule,
   ],
 })
 export class UsersAppModule {}
