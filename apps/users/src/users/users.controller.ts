@@ -1,15 +1,17 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserCreate, userCreateValidator } from './user.schema';
 import { UserType } from './user.types';
 import { PaginatedResult } from '@app/commons/types';
 import { ValidQueryPaginatePipe } from '@app/commons';
 import { ValidParamIdPipe } from '@app/commons/pipes/valid_param_id.pipes';
+import { AccessTokenGuard } from '../auth/guards/access_token.guard';
 
 @Controller({
   version: '1',
   path: 'users',
 })
+@UseGuards(AccessTokenGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

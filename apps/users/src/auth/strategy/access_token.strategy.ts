@@ -6,7 +6,9 @@ import { JwtPayload } from '../auth.types';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private prismaService: PrismaService) {
+  constructor(
+    private prismaService: PrismaService
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: true,
