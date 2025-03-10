@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import jwtConfig from '@app/commons/config/jwt.config';
+import { UserRegisteredListener } from './listeners/user-registered.listener';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import jwtConfig from '@app/commons/config/jwt.config';
     AuthService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    UserRegisteredListener,
   ],
 })
 export class AuthModule {}

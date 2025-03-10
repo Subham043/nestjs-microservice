@@ -1,0 +1,56 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigType } from '@nestjs/config';
+import { notificationAppConfigValidator } from '@app/commons';
+import { NotificationsModule } from './users/notifications.module';
+import notificationAppConfig from '@app/commons/config/notificationApp.config';
+import mailConfig from '@app/commons/config/mail.config';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { join } from 'path';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: 'apps/notifications/.env',
+      expandVariables: true,
+      load: [notificationAppConfig, mailConfig],
+      isGlobal: true,
+      cache: false,
+      validationSchema: notificationAppConfigValidator
+    }),
+    MailerModule.forRootAsync(
+      {
+        imports: [ConfigModule],
+        inject: [mailConfig.KEY],
+        useFactory: (config: ConfigType<typeof mailConfig>) => ({
+          transport: {
+            host: config.mail_host,
+            port: Number(config.mail_port),
+            tls: {
+              rejectUnauthorized: false,
+            },
+            secure: false,
+            auth: {
+              user: config.mail_user,
+              pass: config.mail_password,
+            },
+          },
+          defaults: {
+            from: '"No Reply - ParcelCounter" <no-reply@parcelcounter.in>',
+          },
+          template: {
+            dir: join(__dirname, 'templates'),
+            adapter: new PugAdapter({
+              inlineCssEnabled: false,
+            }), // or new PugAdapter() or new EjsAdapter()
+            options: {
+              strict: true,
+            },
+          },
+        })
+      }
+    ),
+    NotificationsModule,
+  ],
+})
+export class NotificationsAppModule {}

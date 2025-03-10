@@ -37,4 +37,16 @@ const gatewayAppConfigSchema = vine.object({
 const gatewayAppConfigValidator = vine.compile(gatewayAppConfigSchema)
 gatewayAppConfigValidator.messagesProvider = simpleMessagesProvider
 
-export { userAppConfigValidator, gatewayAppConfigValidator }
+const notificationAppConfigSchema = vine.object({
+  NOTIFICATION_APP_PORT: vine.number(),
+  MAIL_HOST: vine.string(),
+  MAIL_PORT: vine.number(),
+  MAIL_USERNAME: vine.string(),
+  MAIL_PASSWORD: vine.string(),
+})
+
+
+const notificationAppConfigValidator = vine.compile(notificationAppConfigSchema)
+notificationAppConfigValidator.messagesProvider = simpleMessagesProvider
+
+export { userAppConfigValidator, gatewayAppConfigValidator, notificationAppConfigValidator }

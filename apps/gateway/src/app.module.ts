@@ -8,7 +8,8 @@ import { gatewayAppConfigValidator } from '@app/commons';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: './apps/gateway/.env',
+      envFilePath: 'apps/gateway/.env',
+      expandVariables: true,
       load: [appConfig],
       isGlobal: true,
       cache: true,

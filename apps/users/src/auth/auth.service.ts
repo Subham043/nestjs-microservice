@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload, Token } from './auth.types';
 import jwtConfig from '@app/commons/config/jwt.config';
 import { ConfigType } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserRegisteredEvent } from './events/user-registered.event';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +22,8 @@ export class AuthService {
     @Inject(jwtConfig.KEY)
     private jwtConfigKey: ConfigType<typeof jwtConfig>,
     private jwtService: JwtService,
-    private prismaService: PrismaService
+    private prismaService: PrismaService,
+    private eventEmitter: EventEmitter2
   ){
     this.prisma = this.prismaService.$extends({
       result: {
@@ -96,10 +99,12 @@ export class AuthService {
   async signUp(data: UserSignup): Promise<UserType> {
     const {password, ...rest} = data;
     const hashedPassword = await bcrypt.hash(password, this.saltRounds);
-    return await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {...rest, password: hashedPassword},
       omit: this.ommitedFields
     });
+    this.eventEmitter.emit('user.registered', new UserRegisteredEvent(user.id, user.name || '', user.email, user.role));
+    return user;
   }
   
 }
