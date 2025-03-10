@@ -6,5 +6,5 @@ export default registerAs('database', () => ({
     name: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    url: process.env.DATABASE_URL
+    url: process.env.DB_URL
 }));

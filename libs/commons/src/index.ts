@@ -5,3 +5,5 @@ export * from './config/app.config';
 export * from './config/database.config';
 export * from './config/redis.config';
 export * from './config/config.schema';
+export * from './prisma/prisma.module';
+export * from './pipes/valid_query_paginate.pipes';

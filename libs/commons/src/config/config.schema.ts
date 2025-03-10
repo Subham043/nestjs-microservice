@@ -14,7 +14,7 @@ const userAppConfigSchema = vine.object({
   DB_NAME: vine.string(),
   DB_USER: vine.string(),
   DB_PASSWORD: vine.string(),
-  DATABASE_URL: vine.string(),
+  DB_URL: vine.string(),
   REDIS_URL: vine.string()
 })
 
