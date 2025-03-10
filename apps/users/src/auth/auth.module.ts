@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import jwtConfig from '@app/commons/config/jwt.config';
 import { UserRegisteredListener } from './listeners/user-registered.listener';
+import { QUEUE_USER, RabbitMQModule } from '@app/commons';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserRegisteredListener } from './listeners/user-registered.listener';
         signOptions: { expiresIn: config.expiry },
       })
     }),
+    RabbitMQModule.register({ name: QUEUE_USER.NOTIFICATION })
   ],
   controllers: [AuthController],
   providers: [

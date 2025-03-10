@@ -23,7 +23,7 @@ export class AuthService {
     private jwtConfigKey: ConfigType<typeof jwtConfig>,
     private jwtService: JwtService,
     private prismaService: PrismaService,
-    private eventEmitter: EventEmitter2
+    private eventEmitter: EventEmitter2,
   ){
     this.prisma = this.prismaService.$extends({
       result: {

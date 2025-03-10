@@ -7,7 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import proxy from '@fastify/http-proxy';
 import helmet from 'helmet';
-import { RabbitMQService } from '@app/commons';
+import { QUEUE_USER, RabbitMQService } from '@app/commons';
 import { RmqOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
@@ -91,9 +91,9 @@ async function bootstrap() {
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   });
   
-  app.connectMicroservice<RmqOptions>(rmqService.getOptions('GATEWAY', true));
-  await app.startAllMicroservices();
-
+  app.connectMicroservice<RmqOptions>(rmqService.getOptions(QUEUE_USER.GATEWAY, true));
+  
   await app.listen(GATEWAY_APP_PORT);
+  await app.startAllMicroservices();
 }
 bootstrap();

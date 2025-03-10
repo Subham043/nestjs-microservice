@@ -5,7 +5,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { UsersAppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { RabbitMQService, TransformInterceptor, ValidationExceptionFilter } from '@app/commons';
+import { QUEUE_USER, RabbitMQService, TransformInterceptor, ValidationExceptionFilter } from '@app/commons';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
 import { RmqOptions } from '@nestjs/microservices';
@@ -13,9 +13,9 @@ import { RmqOptions } from '@nestjs/microservices';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(UsersAppModule, new FastifyAdapter({ trustProxy: true }));
   const configService = app.get(ConfigService);
-  const USER_APP_PORT = configService.get<number>('USER_APP_PORT') || 3001;
-  const GATEWAY_APP_URL = configService.get<string>('GATEWAY_APP_URL') || 'http://localhost:3000';
-  const USER_APP_URL = configService.get<string>('USER_APP_URL') || 'http://localhost:3001';
+  const USER_APP_PORT = configService.get<number>('USER_APP_PORT') as number;
+  const GATEWAY_APP_URL = configService.get<string>('GATEWAY_APP_URL') as string;
+  const USER_APP_URL = configService.get<string>('USER_APP_URL') as string;
 
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new ValidationExceptionFilter());
@@ -81,8 +81,8 @@ async function bootstrap() {
   // Retrieve environment variables
 
   const rmqService = app.get<RabbitMQService>(RabbitMQService);
-  app.connectMicroservice<RmqOptions>(rmqService.getOptions('AUTH', true));
-  await app.startAllMicroservices();
+  const microservice = app.connectMicroservice<RmqOptions>(rmqService.getOptions(QUEUE_USER.AUTH));
+  await microservice.listen();
 
   await app.listen(USER_APP_PORT);
 }

@@ -17,38 +17,22 @@ export class RabbitMQModule {
     return {
       module: RabbitMQModule,
       imports: [
-        // ClientsModule.registerAsync([
-        //   {
-        //     name,
-        //     imports: [ConfigModule],
-        //     inject: [rabbitMQConfig.KEY],
-        //     useFactory: (config: ConfigType<typeof rabbitMQConfig>) => {
-        //         return {
-        //             transport: Transport.RMQ,
-        //             options: {
-        //               urls: [(config.uri as string)],
-        //               queue: config.queue,
-        //               queueOptions: {
-        //                 durable: false
-        //               },
-        //             },
-        //           };
-        //     },
-        //   },
-        // ]),
-        ClientsModule.register([
+        ClientsModule.registerAsync([
           {
             name,
-            transport: Transport.RMQ,
-            options: {
-              urls: [(process.env.RABBITMQ_URI as string)],
-              queue: process.env.RABBITMQ_QUEUE,
-              queueOptions: {
-                durable: false
-              },
+            imports: [ConfigModule],
+            inject: [rabbitMQConfig.KEY],
+            useFactory: (config: ConfigType<typeof rabbitMQConfig>) => {
+              return {
+                transport: Transport.RMQ,
+                options: {
+                  urls: [(config.uri as string)],
+                  queue: name,
+                },
+              };
             },
-          }
-        ])
+          },
+        ]),
       ],
       exports: [ClientsModule],
     };

@@ -12,3 +12,4 @@ export * from './prisma/prisma.module';
 export * from './pipes/valid_query_paginate.pipes';
 export * from './rabbitmq/rabbitmq.module';
 export * from './rabbitmq/rabbitmq.service';
+export * from './rabbitmq/rabbitmq.queue';

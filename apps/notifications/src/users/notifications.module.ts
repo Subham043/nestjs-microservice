@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
+import { RabbitMQModule } from '@app/commons';
 
 @Module({
-  imports: [],
+  imports: [RabbitMQModule],
   controllers: [NotificationsController],
   providers: [NotificationsService],
 })

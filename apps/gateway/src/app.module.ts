@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from '@app/commons/config/app.config';
-import { gatewayAppConfigValidator, RabbitMQModule } from '@app/commons';
+import { gatewayAppConfigValidator, QUEUE_USER, RabbitMQModule } from '@app/commons';
 import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
 
 @Module({

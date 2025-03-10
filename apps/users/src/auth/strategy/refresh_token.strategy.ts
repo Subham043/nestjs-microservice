@@ -13,7 +13,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
   constructor(private prismaService: PrismaService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_REFRESH_SECRET_KEY || 'secretKey',
+      secretOrKey: process.env.JWT_REFRESH_SECRET_KEY as string,
       passReqToCallback: true,
     });
   }

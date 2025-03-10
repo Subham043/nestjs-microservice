@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
-import { notificationAppConfigValidator, RabbitMQModule } from '@app/commons';
+import { notificationAppConfigValidator, QUEUE_USER, RabbitMQModule } from '@app/commons';
 import { NotificationsModule } from './users/notifications.module';
 import notificationAppConfig from '@app/commons/config/notificationApp.config';
 import mailConfig from '@app/commons/config/mail.config';
