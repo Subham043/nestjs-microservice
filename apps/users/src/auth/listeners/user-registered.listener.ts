@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UserRegisteredEvent } from '../events/user-registered.event';
-import { QUEUE_USER } from '@app/commons';
+import { QUEUE_USER, USER_EVENTS } from '@app/commons';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 
@@ -11,12 +11,10 @@ export class UserRegisteredListener {
     @Inject(QUEUE_USER.NOTIFICATION) private notificationClient: ClientProxy,
   ) {}
 
-  @OnEvent('user.registered')
+  @OnEvent(USER_EVENTS.REGISTERED)
   async handleUserRegisteredEvent(event: UserRegisteredEvent) {
-    // handle and process "OrderCreatedEvent" event
-    console.log('user_event: ', event);
     await lastValueFrom(
-      this.notificationClient.emit('user.registered', {
+      this.notificationClient.emit(USER_EVENTS.REGISTERED, {
         ...event
       }),
     );

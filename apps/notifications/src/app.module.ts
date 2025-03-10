@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { notificationAppConfigValidator, QUEUE_USER, RabbitMQModule } from '@app/commons';
-import { NotificationsModule } from './users/notifications.module';
+import { UserNotificationsModule } from './users/users.module';
 import notificationAppConfig from '@app/commons/config/notificationApp.config';
 import mailConfig from '@app/commons/config/mail.config';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -52,7 +52,7 @@ import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
       }
     ),
     RabbitMQModule,
-    NotificationsModule,
+    UserNotificationsModule,
   ],
 })
 export class NotificationsAppModule {}

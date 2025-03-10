@@ -10,6 +10,7 @@ import jwtConfig from '@app/commons/config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserRegisteredEvent } from './events/user-registered.event';
+import { USER_EVENTS } from '@app/commons';
 
 @Injectable()
 export class AuthService {
@@ -103,7 +104,7 @@ export class AuthService {
       data: {...rest, password: hashedPassword},
       omit: this.ommitedFields
     });
-    this.eventEmitter.emit('user.registered', new UserRegisteredEvent(user.id, user.name || '', user.email, user.role));
+    this.eventEmitter.emit(USER_EVENTS.REGISTERED, new UserRegisteredEvent(user.id, user.name || '', user.email, user.role));
     return user;
   }
   
