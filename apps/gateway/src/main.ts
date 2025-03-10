@@ -7,6 +7,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import proxy from '@fastify/http-proxy';
 import helmet from 'helmet';
+import { RabbitMQService } from '@app/commons';
+import { RmqOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({ trustProxy: true});
@@ -25,14 +27,15 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
+  const rmqService = app.get<RabbitMQService>(RabbitMQService);
 
   // Get ConfigService from the app context
   const configService = app.get(ConfigService);
 
   // Retrieve environment variables
-  const GATEWAY_APP_PORT = configService.get<number>('GATEWAY_APP_PORT') || 3000;
-  const GATEWAY_APP_URL = configService.get<string>('GATEWAY_APP_URL') || 'http://localhost:3000';
-  const USER_APP_URL = configService.get<string>('USER_APP_URL') || 'http://localhost:3001';
+  const GATEWAY_APP_PORT = configService.get<number>('GATEWAY_APP_PORT') as number;
+  const GATEWAY_APP_URL = configService.get<string>('GATEWAY_APP_URL') as string;
+  const USER_APP_URL = configService.get<string>('USER_APP_URL') as string;
 
   app.use(
     helmet({
@@ -87,6 +90,9 @@ async function bootstrap() {
     exposedHeaders: 'Content-Length',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   });
+  
+  app.connectMicroservice<RmqOptions>(rmqService.getOptions('GATEWAY', true));
+  await app.startAllMicroservices();
 
   await app.listen(GATEWAY_APP_PORT);
 }

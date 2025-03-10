@@ -20,6 +20,7 @@ const userAppConfigSchema = vine.object({
   JWT_EXPIRY_TIME: vine.string(),
   JWT_REFRESH_SECRET_KEY: vine.string(),
   JWT_REFRESH_EXPIRY_TIME: vine.string(),
+  RABBIT_MQ_URI: vine.string(),
 })
 
 
@@ -31,6 +32,7 @@ const gatewayAppConfigSchema = vine.object({
   GATEWAY_APP_URL: vine.string(),
   USER_APP_PORT: vine.number(),
   USER_APP_URL: vine.string(),
+  RABBIT_MQ_URI: vine.string(),
 })
 
 
@@ -43,6 +45,7 @@ const notificationAppConfigSchema = vine.object({
   MAIL_PORT: vine.number(),
   MAIL_USERNAME: vine.string(),
   MAIL_PASSWORD: vine.string(),
+  RABBIT_MQ_URI: vine.string(),
 })
 
 

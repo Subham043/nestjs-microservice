@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
-import { notificationAppConfigValidator } from '@app/commons';
+import { notificationAppConfigValidator, RabbitMQModule } from '@app/commons';
 import { NotificationsModule } from './users/notifications.module';
 import notificationAppConfig from '@app/commons/config/notificationApp.config';
 import mailConfig from '@app/commons/config/mail.config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { join } from 'path';
+import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: 'apps/notifications/.env',
+      envFilePath: '.env',
       expandVariables: true,
-      load: [notificationAppConfig, mailConfig],
+      load: [notificationAppConfig, mailConfig, rabbitMQConfig],
       isGlobal: true,
       cache: false,
       validationSchema: notificationAppConfigValidator
@@ -50,6 +51,7 @@ import { join } from 'path';
         })
       }
     ),
+    RabbitMQModule,
     NotificationsModule,
   ],
 })

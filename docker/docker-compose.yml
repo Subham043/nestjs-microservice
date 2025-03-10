@@ -46,3 +46,18 @@ services:
       - "6379:6379"
     networks:
       - microservice_network
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: microservice_rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+        - ./rabbitmq/data/:/var/lib/rabbitmq/
+        - ./rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - microservice_network

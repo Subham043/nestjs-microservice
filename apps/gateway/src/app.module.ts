@@ -3,18 +3,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from '@app/commons/config/app.config';
-import { gatewayAppConfigValidator } from '@app/commons';
+import { gatewayAppConfigValidator, RabbitMQModule } from '@app/commons';
+import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: 'apps/gateway/.env',
+      envFilePath: '.env',
       expandVariables: true,
-      load: [appConfig],
+      load: [appConfig, rabbitMQConfig],
       isGlobal: true,
-      cache: true,
+      cache: false,
       validationSchema: gatewayAppConfigValidator,
     }),
+    RabbitMQModule,
   ],
   controllers: [AppController],
   providers: [AppService],

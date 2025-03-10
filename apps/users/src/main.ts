@@ -5,9 +5,10 @@ import {
 } from '@nestjs/platform-fastify';
 import { UsersAppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { TransformInterceptor, ValidationExceptionFilter } from '@app/commons';
+import { RabbitMQService, TransformInterceptor, ValidationExceptionFilter } from '@app/commons';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
+import { RmqOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(UsersAppModule, new FastifyAdapter({ trustProxy: true }));
@@ -78,6 +79,10 @@ async function bootstrap() {
   // Get ConfigService from the app context
   
   // Retrieve environment variables
+
+  const rmqService = app.get<RabbitMQService>(RabbitMQService);
+  app.connectMicroservice<RmqOptions>(rmqService.getOptions('AUTH', true));
+  await app.startAllMicroservices();
 
   await app.listen(USER_APP_PORT);
 }
