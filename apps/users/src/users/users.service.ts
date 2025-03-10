@@ -1,5 +1,5 @@
 import { PrismaService } from '@app/commons/prisma/prisma.service';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserCreate } from './user.schema';
 import * as bcrypt from 'bcryptjs';
 import { UserType } from './user.types';

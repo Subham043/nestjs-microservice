@@ -15,7 +15,11 @@ const userAppConfigSchema = vine.object({
   DB_USER: vine.string(),
   DB_PASSWORD: vine.string(),
   DB_URL: vine.string(),
-  REDIS_URL: vine.string()
+  REDIS_URL: vine.string(),
+  JWT_SECRET_KEY: vine.string(),
+  JWT_EXPIRY_TIME: vine.string(),
+  JWT_REFRESH_SECRET_KEY: vine.string(),
+  JWT_REFRESH_EXPIRY_TIME: vine.string(),
 })
 
 

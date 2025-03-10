@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserCreate, userCreateValidator } from './user.schema';
 import { UserType } from './user.types';
@@ -15,8 +15,8 @@ export class UsersController {
 
   @Get('/')
   async paginateUsers(
-    @Query('skip', ValidQueryPaginatePipe) skip: number,
-    @Query('take', ValidQueryPaginatePipe) take: number,
+    @Query('skip', ValidQueryPaginatePipe) skip: number|undefined,
+    @Query('take', ValidQueryPaginatePipe) take: number|undefined,
   ): Promise<PaginatedResult<UserType>> {
     return await this.usersService.paginateUsers({skip, take});
   }

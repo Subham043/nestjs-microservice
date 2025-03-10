@@ -17,6 +17,12 @@ async function bootstrap() {
     prefix: '/api/v1/users', // Proxy requests starting with '/api/users'
     rewritePrefix: '/v1/users', // Rewrite '/api/users' to '/users'
   });
+  
+  fastifyAdapter.register(proxy, {
+    upstream: 'http://localhost:3001', // Target server
+    prefix: '/api/v1/auth', // Proxy requests starting with '/api/users'
+    rewritePrefix: '/v1/auth', // Rewrite '/api/users' to '/users'
+  });
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
 
