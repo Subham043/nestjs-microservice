@@ -82,8 +82,8 @@ async function bootstrap() {
 
   const rmqService = app.get<RabbitMQService>(RabbitMQService);
   const microservice = app.connectMicroservice<RmqOptions>(rmqService.getOptions(QUEUE_USER.AUTH));
-  await microservice.listen();
-
+  
   await app.listen(USER_APP_PORT);
+  await microservice.listen();
 }
 bootstrap();

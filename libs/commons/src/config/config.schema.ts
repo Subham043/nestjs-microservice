@@ -45,6 +45,8 @@ const notificationAppConfigSchema = vine.object({
   MAIL_PORT: vine.number(),
   MAIL_USERNAME: vine.string(),
   MAIL_PASSWORD: vine.string(),
+  JWT_SECRET_KEY: vine.string(),
+  JWT_EXPIRY_TIME: vine.string(),
   RABBIT_MQ_URI: vine.string(),
 })
 

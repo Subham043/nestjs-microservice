@@ -8,13 +8,14 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { join } from 'path';
 import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
+import jwtConfig from '@app/commons/config/jwt.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       expandVariables: true,
-      load: [notificationAppConfig, mailConfig, rabbitMQConfig],
+      load: [notificationAppConfig, mailConfig, rabbitMQConfig, jwtConfig],
       isGlobal: true,
       cache: false,
       validationSchema: notificationAppConfigValidator

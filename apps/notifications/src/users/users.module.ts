@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { UserNotificationsController } from './users.controller';
 import { UserNotificationsService } from './users.service';
-import { RabbitMQModule } from '@app/commons';
+import { JwtAuthRMQModule, RabbitMQService } from '@app/commons';
 
 @Module({
-  imports: [RabbitMQModule],
+  imports: [
+    JwtAuthRMQModule.register(),
+  ],
   controllers: [UserNotificationsController],
-  providers: [UserNotificationsService],
+  providers: [UserNotificationsService, RabbitMQService],
 })
 export class UserNotificationsModule {}

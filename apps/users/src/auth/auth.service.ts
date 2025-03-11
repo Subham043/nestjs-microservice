@@ -107,5 +107,12 @@ export class AuthService {
     this.eventEmitter.emit(USER_EVENTS.REGISTERED, new UserRegisteredEvent(user.id, user.name || '', user.email, user.role));
     return user;
   }
+
+  async verifyRMQUser(payload: JwtPayload): Promise<UserType> {
+    return await this.prisma.user.findUniqueOrThrow({
+      where: {id: payload.id},
+      omit: this.ommitedFields
+    });
+  }
   
 }

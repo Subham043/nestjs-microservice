@@ -7,8 +7,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import proxy from '@fastify/http-proxy';
 import helmet from 'helmet';
-import { QUEUE_USER, RabbitMQService } from '@app/commons';
+import { QUEUE_USER, RabbitMQService, TransformInterceptor } from '@app/commons';
 import { RmqOptions } from '@nestjs/microservices';
+import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({ trustProxy: true});
@@ -25,9 +26,20 @@ async function bootstrap() {
     prefix: '/api/v1/auth', // Proxy requests starting with '/api/users'
     rewritePrefix: '/v1/auth', // Rewrite '/api/users' to '/users'
   });
+  
+  fastifyAdapter.register(proxy, {
+    upstream: 'http://localhost:3002', // Target server
+    prefix: '/api/v1/notifications', // Proxy requests starting with '/api/users'
+    rewritePrefix: '/v1/notifications', // Rewrite '/api/users' to '/users'
+  });
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
   const rmqService = app.get<RabbitMQService>(RabbitMQService);
+
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   // Get ConfigService from the app context
   const configService = app.get(ConfigService);

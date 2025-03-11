@@ -1,9 +1,9 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { UnauthorizedException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/commons/prisma/prisma.service';
-import { JwtRefreshPayload } from '../auth.types';
+import { JwtPayload, JwtRefreshPayload } from '../auth.types';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -18,13 +18,25 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(req: Request, payload: any): JwtRefreshPayload {
-    const result = this.prismaService.user.findFirst({
-      where: {
-        id: payload.id,
-      },
-    });
-    if (!result) throw new ForbiddenException('Unauthorized');
-    return payload;
+  async validate(req: Request, payload: JwtPayload): Promise<JwtRefreshPayload> {
+    const refreshToken = req?.get('Authorization')?.replace('Bearer', '').trim();
+    try {
+      const result = await this.prismaService.user.findFirstOrThrow({
+        where: {
+          id: payload.id,
+        },
+        omit: {
+          password: true
+        }
+      });
+      return {
+        ...result,
+        name: result.name || '',
+        isVerified: result.verifiedAt !== null,
+        refreshToken: refreshToken || '',
+      };
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 }
