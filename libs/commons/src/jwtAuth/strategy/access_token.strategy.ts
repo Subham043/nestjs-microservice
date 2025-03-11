@@ -22,7 +22,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
         id: payload.id,
       },
     });
-    if (!result) throw new ForbiddenException('Access token malformed');
+    if (!result) throw new ForbiddenException('Unauthorized');
     return payload;
   }
 }

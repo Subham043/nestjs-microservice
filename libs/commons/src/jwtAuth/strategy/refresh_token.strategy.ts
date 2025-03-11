@@ -24,7 +24,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
         id: payload.id,
       },
     });
-    if (!result) throw new ForbiddenException('Refresh token malformed');
+    if (!result) throw new ForbiddenException('Unauthorized');
     return payload;
   }
 }
