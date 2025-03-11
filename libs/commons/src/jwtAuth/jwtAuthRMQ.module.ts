@@ -8,12 +8,7 @@ import { QUEUE_USER } from '../rabbitmq/rabbitmq.queue';
 import { RMQAccessTokenStrategy } from './strategy/rmq_access_token.strategy';
 
 
-@Module({
-  providers: [
-    RMQAccessTokenStrategy
-  ],
-  exports: [],
-})
+@Module({})
 export class JwtAuthRMQModule {
   static register(): DynamicModule {
     return {
@@ -31,6 +26,9 @@ export class JwtAuthRMQModule {
         }),
       ],
       exports: [PassportModule, JwtModule],
+      providers: [
+        RMQAccessTokenStrategy
+      ],
     };
   }
 }

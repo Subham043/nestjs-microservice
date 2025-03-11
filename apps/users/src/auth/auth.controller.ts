@@ -18,7 +18,7 @@ export class AuthController {
   ) {}
 
   @Post('/signin')
-  @Throttle({ default: { limit: 3, ttl: 1000 } })
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   async signin(
     @Body() userDTO: UserSignin,
   ): Promise<UserType> 

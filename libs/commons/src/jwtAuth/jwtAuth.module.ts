@@ -7,13 +7,7 @@ import { AccessTokenStrategy } from './strategy/access_token.strategy';
 import { RefreshTokenStrategy } from './strategy/refresh_token.strategy';
 
 
-@Module({
-  providers: [
-    AccessTokenStrategy,
-    RefreshTokenStrategy,
-  ],
-  exports: [],
-})
+@Module({})
 export class JwtAuthModule {
   static register(): DynamicModule {
     return {
@@ -30,6 +24,10 @@ export class JwtAuthModule {
         }),
       ],
       exports: [PassportModule, JwtModule],
+      providers: [
+        AccessTokenStrategy,
+        RefreshTokenStrategy
+      ]
     };
   }
 }

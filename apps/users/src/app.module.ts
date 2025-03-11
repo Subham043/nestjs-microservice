@@ -21,11 +21,11 @@ import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
       validationSchema: userAppConfigValidator
     }),
     EventEmitterModule.forRoot(),
+    ThrottleModule.forRootAsync(),
+    RabbitMQModule,
     PrismaModule,
-    ThrottleModule,
     UsersModule,
     AuthModule,
-    RabbitMQModule,
   ],
 })
 export class UsersAppModule {}

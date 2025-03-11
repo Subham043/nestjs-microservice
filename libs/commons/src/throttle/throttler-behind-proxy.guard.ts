@@ -1,5 +1,5 @@
 
-import { seconds, ThrottlerException, ThrottlerGuard, ThrottlerLimitDetail } from '@nestjs/throttler';
+import { ThrottlerException, ThrottlerGuard, ThrottlerLimitDetail } from '@nestjs/throttler';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 
 @Injectable()
