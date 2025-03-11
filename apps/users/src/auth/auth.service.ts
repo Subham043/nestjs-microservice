@@ -1,16 +1,16 @@
 import { PrismaService } from '@app/commons/prisma/prisma.service';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { ExtendedPrismaClient, PaginatedResult, PaginationParams } from '@app/commons/types';
+import { ExtendedPrismaClient } from '@app/commons/types';
 import { UserSignin, UserSignup } from './auth.schema';
 import { UserType } from '../users/user.types';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload, Token } from './auth.types';
 import jwtConfig from '@app/commons/config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserRegisteredEvent } from './events/user-registered.event';
 import { USER_EVENTS } from '@app/commons';
+import { JwtPayload, Token } from '@app/commons/jwtAuth/auth.types';
 
 @Injectable()
 export class AuthService {

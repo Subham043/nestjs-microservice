@@ -3,9 +3,8 @@ import { UsersService } from './users.service';
 import { UserCreate, userCreateValidator } from './user.schema';
 import { UserType } from './user.types';
 import { PaginatedResult } from '@app/commons/types';
-import { ValidQueryPaginatePipe } from '@app/commons';
+import { AccessTokenGuard, ValidQueryPaginatePipe } from '@app/commons';
 import { ValidParamIdPipe } from '@app/commons/pipes/valid_param_id.pipes';
-import { AccessTokenGuard } from '../auth/guards/access_token.guard';
 
 @Controller({
   version: '1',
