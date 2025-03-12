@@ -86,9 +86,9 @@ services:
             - node_modules/
         - action: rebuild
           path: package.json
+        - action: rebuild
+          path: .env
     volumes:
-      # - ./apps/gateway:/usr/src/app/apps/gateway
-      # - ./libs:/usr/src/app/libs
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
@@ -124,12 +124,12 @@ services:
             - node_modules/
         - action: rebuild
           path: package.json
+        - action: rebuild
+          path: .env
     volumes:
-      # - ./apps/users:/usr/src/app
-      # - ./libs:/usr/src/app/apps/libs
       - /usr/src/app/node_modules
-    # ports:
-    #   - '3001:3001'
+    ports:
+      - '3001:3001'
     networks:
       - microservice_network
   
@@ -159,11 +159,11 @@ services:
             - node_modules/
         - action: rebuild
           path: package.json
+        - action: rebuild
+          path: .env
     volumes:
-      # - ./apps/notifications:/usr/src/app/apps/notifications
-      # - ./libs:/usr/src/app/apps/libs
       - /usr/src/app/node_modules
-    # ports:
-    #   - '3002:3002'
+    ports:
+      - '3002:3002'
     networks:
       - microservice_network
