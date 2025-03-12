@@ -4,20 +4,21 @@ WORKDIR /usr/src/app
 
 # Copy the root package.json and package-lock.json
 COPY package*.json ./
+
+RUN npm install
+
 COPY nest-cli.json ./
 COPY tsconfig*.json ./
-COPY .env ./
-COPY apps/users ./apps/users
+
+COPY apps/notifications ./apps/notifications
 COPY libs ./libs
 
 # Verify that package.json is copied
 RUN ls -la /usr/src/app && cat /usr/src/app/package.json
 
-RUN npm install
-RUN npx prisma generate --schema=/usr/src/app/apps/users/prisma/schema.prisma
 
-RUN npm run build users
+RUN npm run build notifications
 
-EXPOSE 3001
+EXPOSE 3002
 
-CMD npm run start:dev users
+CMD npm run start:dev notifications

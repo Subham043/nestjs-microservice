@@ -13,7 +13,7 @@ import jwtConfig from '@app/commons/config/jwt.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      // envFilePath: '.env',
       expandVariables: true,
       load: [notificationAppConfig, mailConfig, rabbitMQConfig, jwtConfig],
       isGlobal: true,

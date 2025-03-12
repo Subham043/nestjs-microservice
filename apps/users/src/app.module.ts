@@ -13,7 +13,7 @@ import rabbitMQConfig from '@app/commons/config/rabbitMQ.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      // envFilePath: '.env',
       expandVariables: true,
       load: [databaseConfig, appConfig, redisConfig, jwtConfig, rabbitMQConfig],
       isGlobal: true,

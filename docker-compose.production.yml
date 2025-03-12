@@ -7,14 +7,14 @@ services:
 
   user_mysql:
     image: mariadb:10.5.8
-    restart: unless-stopped
+    restart: always
     tty: true
     ports:
       - "3306:3306"
     volumes:
       - ./docker/mysql:/var/lib/mysql
     env_file:
-      - .env
+      - .env.production
     environment:
       - MYSQL_HOST=${DB_HOST}
       - MYSQL_PORT=${DB_PORT}
@@ -33,7 +33,7 @@ services:
     ports:
       - '8086:80'
     env_file:
-      - .env
+      - .env.production
     environment:
       - PMA_HOST=${DB_HOST}
       - PHP_ENABLE_XDEBUG=0
@@ -43,7 +43,7 @@ services:
 
   redis:
     image: redis:alpine
-    restart: unless-stopped
+    restart: always
     ports:
       - "6379:6379"
     networks:
@@ -51,11 +51,12 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
+    restart: always
     ports:
         - 5672:5672
         - 15672:15672
     env_file:
-      - .env
+      - .env.production
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
@@ -68,33 +69,17 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: /apps/gateway/Dockerfile.dev
-      target: development
-    command: npm run start:dev gateway
+      dockerfile: /apps/gateway/Dockerfile.production
+      target: production
+    command: ["pm2-runtime", "start", "dist/apps/gateway/main.js"]
     env_file:
-      - .env
+      - .env.production
     depends_on:
       - user_mysql
       - redis
       - rabbitmq
       - users
       - notifications
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/gateway
-          target: /usr/src/app/apps/gateway
-          ignore:
-            - node_modules/
-        - action: sync
-          path: ./libs
-          target: /usr/src/app/libs
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: package.json
-        - action: rebuild
-          path: .env
     volumes:
       - /usr/src/app/node_modules
     ports:
@@ -105,11 +90,11 @@ services:
   users:
     build:
       context: .
-      dockerfile: /apps/users/Dockerfile.dev
-      target: development
-    command: npm run start:dev users
+      dockerfile: /apps/users/Dockerfile.production
+      target: production
+    command: ["pm2-runtime", "start", "dist/apps/users/main.js"]
     env_file:
-      - .env
+      - .env.production
     # environment:
     #   - DB_URL="mysql://root:microservice@user_mysql:3306/microservice_user_app?schema=public"
     depends_on:
@@ -117,22 +102,6 @@ services:
       - redis
       - rabbitmq
       - notifications
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/users
-          target: /usr/src/app/apps/users
-          ignore:
-            - node_modules/
-        - action: sync
-          path: ./libs
-          target: /usr/src/app/libs
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: package.json
-        - action: rebuild
-          path: .env
     volumes:
       - /usr/src/app/node_modules
     ports:
@@ -143,31 +112,15 @@ services:
   notifications:
     build:
       context: .
-      dockerfile: /apps/notifications/Dockerfile.dev
-      target: development
-    command: npm run start:dev notifications
+      dockerfile: /apps/notifications/Dockerfile.production
+      target: production
+    command: ["pm2-runtime", "start", "dist/apps/notifications/main.js"]
     env_file:
-      - .env
+      - .env.production
     depends_on:
       - user_mysql
       - redis
       - rabbitmq
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/notifications
-          target: /usr/src/app/apps/notifications
-          ignore:
-            - node_modules/
-        - action: sync
-          path: ./libs
-          target: /usr/src/app/libs
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: package.json
-        - action: rebuild
-          path: .env
     volumes:
       - /usr/src/app/node_modules
     ports:
