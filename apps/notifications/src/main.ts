@@ -18,7 +18,7 @@ async function bootstrap() {
 
   const rmqService = app.get<RabbitMQService>(RabbitMQService);
   const microservice = app.connectMicroservice<RmqOptions>(rmqService.getOptions(QUEUE_USER.NOTIFICATION));
-  await app.listen(NOTIFICATION_APP_PORT);
+  await app.listen(NOTIFICATION_APP_PORT, '0.0.0.0');
   await microservice.listen();
 }
 bootstrap();

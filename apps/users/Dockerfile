@@ -1,0 +1,23 @@
+FROM node:22-alpine AS development
+
+WORKDIR /usr/src/app
+
+# Copy the root package.json and package-lock.json
+COPY package*.json ./
+COPY nest-cli.json ./
+COPY tsconfig*.json ./
+COPY .env ./
+COPY apps/users ./apps/users
+COPY libs ./libs
+
+# Verify that package.json is copied
+RUN ls -la /usr/src/app && cat /usr/src/app/package.json
+
+RUN npm install
+RUN npx prisma generate --schema=/usr/src/app/apps/users/prisma/schema.prisma
+
+RUN npm run build users
+
+EXPOSE 3001
+
+CMD npm run start:dev users

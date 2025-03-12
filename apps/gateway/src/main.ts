@@ -16,19 +16,19 @@ async function bootstrap() {
 
   // Register the http-proxy plugin with the desired options
   fastifyAdapter.register(proxy, {
-    upstream: 'http://localhost:3001', // Target server
+    upstream: 'http://users:3001', // Target server
     prefix: '/api/v1/users', // Proxy requests starting with '/api/users'
     rewritePrefix: '/v1/users', // Rewrite '/api/users' to '/users'
   });
   
   fastifyAdapter.register(proxy, {
-    upstream: 'http://localhost:3001', // Target server
+    upstream: 'http://users:3001', // Target server
     prefix: '/api/v1/auth', // Proxy requests starting with '/api/users'
     rewritePrefix: '/v1/auth', // Rewrite '/api/users' to '/users'
   });
   
   fastifyAdapter.register(proxy, {
-    upstream: 'http://localhost:3002', // Target server
+    upstream: 'http://notifications:3002', // Target server
     prefix: '/api/v1/notifications', // Proxy requests starting with '/api/users'
     rewritePrefix: '/v1/notifications', // Rewrite '/api/users' to '/users'
   });
@@ -105,7 +105,7 @@ async function bootstrap() {
   
   app.connectMicroservice<RmqOptions>(rmqService.getOptions(QUEUE_USER.GATEWAY, true));
   
-  await app.listen(GATEWAY_APP_PORT);
+  await app.listen(GATEWAY_APP_PORT, '0.0.0.0');
   await app.startAllMicroservices();
 }
 bootstrap();

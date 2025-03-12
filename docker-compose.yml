@@ -1,0 +1,169 @@
+networks:
+  microservice_network:
+
+
+services:
+
+  user_mysql:
+    image: mariadb:10.5.8
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    env_file:
+      - ./docker/.env
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    networks:
+      - microservice_network
+
+  phpmyadmin:
+    depends_on:
+      - user_mysql
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8086:80'
+    env_file:
+      - ./docker/.env
+    networks:
+      - microservice_network
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - microservice_network
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+        - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
+        - ./docker/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - microservice_network
+
+  gateway:
+    build:
+      context: .
+      dockerfile: /apps/gateway/Dockerfile
+      target: development
+    command: npm run start:dev gateway
+    env_file:
+      - .env
+    depends_on:
+      - user_mysql
+      - redis
+      - rabbitmq
+      - users
+      - notifications
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/gateway
+          target: /usr/src/app/apps/gateway
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./libs
+          target: /usr/src/app/libs
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    volumes:
+      # - ./apps/gateway:/usr/src/app/apps/gateway
+      # - ./libs:/usr/src/app/libs
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+    networks:
+      - microservice_network
+  
+  users:
+    build:
+      context: .
+      dockerfile: /apps/users/Dockerfile
+      target: development
+    command: npm run start:dev users
+    env_file:
+      - .env
+    # environment:
+    #   - DB_URL="mysql://root:microservice@user_mysql:3306/microservice_user_app?schema=public"
+    depends_on:
+      - user_mysql
+      - redis
+      - rabbitmq
+      - notifications
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/users
+          target: /usr/src/app/apps/users
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./libs
+          target: /usr/src/app/libs
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    volumes:
+      # - ./apps/users:/usr/src/app
+      # - ./libs:/usr/src/app/apps/libs
+      - /usr/src/app/node_modules
+    # ports:
+    #   - '3001:3001'
+    networks:
+      - microservice_network
+  
+  notifications:
+    build:
+      context: .
+      dockerfile: /apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - .env
+    depends_on:
+      - user_mysql
+      - redis
+      - rabbitmq
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/notifications
+          target: /usr/src/app/apps/notifications
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./libs
+          target: /usr/src/app/libs
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    volumes:
+      # - ./apps/notifications:/usr/src/app/apps/notifications
+      # - ./libs:/usr/src/app/apps/libs
+      - /usr/src/app/node_modules
+    # ports:
+    #   - '3002:3002'
+    networks:
+      - microservice_network
