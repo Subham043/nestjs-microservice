@@ -1,0 +1,10 @@
+services:
+  artillery:
+    image: artilleryio/artillery
+    volumes:
+      - ./docker/artillery-test.yml:/artillery-test.yml
+    # depends_on:
+    #   - gateway
+    command: ["run", "/artillery-test.yml"]
+    # networks:
+    #   - microservice_network
