@@ -110,8 +110,6 @@ services:
     command: npm run start:dev users
     env_file:
       - .env
-    # environment:
-    #   - DB_URL="mysql://root:microservice@user_mysql:3306/microservice_user_app?schema=public"
     depends_on:
       - user_mysql
       - redis
