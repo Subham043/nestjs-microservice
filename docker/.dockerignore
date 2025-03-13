@@ -14,7 +14,3 @@ node_modules
 .eslintrc.js
 .prettierrc
 README.md
-
-mysql
-rabbitmq
-nginx
